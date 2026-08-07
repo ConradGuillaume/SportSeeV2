@@ -1,32 +1,34 @@
 import React from 'react'
-import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
+import {
+  PolarAngleAxis,
+  RadialBar,
+  RadialBarChart,
+  ResponsiveContainer,
+} from 'recharts'
 
 export function ScoreChart({ score }) {
   const percentage = Math.round(score * 100)
-  const data = [
-    { name: 'score', value: percentage },
-    { name: 'remaining', value: 100 - percentage },
-  ]
+  const data = [{ name: 'score', value: percentage, fill: '#ff0000' }]
 
   return (
     <article className="chart-card chart-card--score">
       <h2>Score</h2>
       <ResponsiveContainer width="100%" height={230}>
-        <PieChart>
-          <Pie
+        <RadialBarChart
+          data={data}
+          innerRadius="72%"
+          outerRadius="82%"
+          startAngle={90}
+          endAngle={450}
+        >
+          <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
+          <RadialBar
             data={data}
             dataKey="value"
-            startAngle={90}
-            endAngle={450}
-            innerRadius={72}
-            outerRadius={82}
             cornerRadius={10}
-            paddingAngle={0}
-          >
-            <Cell fill="#ff0000" />
-            <Cell fill="transparent" />
-          </Pie>
-        </PieChart>
+            background={{ fill: '#ffffff' }}
+          />
+        </RadialBarChart>
       </ResponsiveContainer>
       <div className="score-label" aria-label={`Score de ${percentage} pour cent`}>
         <strong>{percentage}%</strong>
