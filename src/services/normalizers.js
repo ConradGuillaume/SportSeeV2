@@ -9,6 +9,12 @@ const kindLabels = {
 
 const dayLabels = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
 
+/**
+ * Unifie todayScore/score en une proportion entre 0 et 1 et prepare les cartes.
+ * todayScore est prioritaire ; un score absent ou non numerique devient 0.
+ * @param {{id: number, userInfos: {firstName: string}, todayScore?: number, score?: number, keyData: {calorieCount: number, proteinCount: number, carbohydrateCount: number, lipidCount: number}}} rawUser
+ * @returns {{id: number, firstName: string, score: number, keyData: Array<{type: string, label: string, value: number, unit: string, tone: string}>}}
+ */
 export function normalizeMainUser(rawUser) {
   const rawScore = rawUser.todayScore ?? rawUser.score ?? 0
   const score = Math.min(Math.max(Number(rawScore) || 0, 0), 1)
@@ -50,14 +56,24 @@ export function normalizeMainUser(rawUser) {
   }
 }
 
+/**
+ * Extrait le jour du mois en UTC pour eviter un decalage selon le fuseau local.
+ * @param {{sessions: Array<{day: string, kilogram: number, calories: number}>}} rawActivity Dates ISO YYYY-MM-DD.
+ * @returns {Array<{day: string, kilogram: number, calories: number}>}
+ */
 export function normalizeActivity(rawActivity) {
-  return rawActivity.sessions.map((session, index) => ({
-    day: String(index + 1),
+  return rawActivity.sessions.map((session) => ({
+    day: String(new Date(session.day).getUTCDate()),
     kilogram: session.kilogram,
     calories: session.calories,
   }))
 }
 
+/**
+ * Convertit les jours 1 (lundi) a 7 (dimanche) en libelles du graphique.
+ * @param {{sessions: Array<{day: number, sessionLength: number}>}} rawSessions Durees en minutes.
+ * @returns {Array<{day: string, sessionLength: number}>}
+ */
 export function normalizeAverageSessions(rawSessions) {
   return rawSessions.sessions.map((session) => ({
     day: dayLabels[session.day - 1],
@@ -65,6 +81,12 @@ export function normalizeAverageSessions(rawSessions) {
   }))
 }
 
+/**
+ * Traduit les categories et inverse leur ordre pour le radar.
+ * Une categorie inconnue conserve son libelle fourni par l'API.
+ * @param {{kind: Object<number, string>, data: Array<{value: number, kind: number}>}} rawPerformance
+ * @returns {Array<{value: number, kind: string}>}
+ */
 export function normalizePerformance(rawPerformance) {
   return rawPerformance.data
     .map((entry) => ({

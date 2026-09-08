@@ -24,6 +24,17 @@ const dataSource = {
     useApi ? fetchEndpoint(`/user/${userId}/performance`) : getMockPerformance(userId),
 }
 
+/**
+ * Charge les quatre ressources en parallele, puis les normalise pour React.
+ * VITE_DATA_SOURCE=api active HTTP ; toute autre valeur utilise le mock.
+ * @param {number} userId Identifiant utilisateur (12 ou 18 dans les exemples).
+ * @returns {Promise<ReturnType<typeof normalizeMainUser> & {
+ *   activity: ReturnType<typeof normalizeActivity>,
+ *   averageSessions: ReturnType<typeof normalizeAverageSessions>,
+ *   performance: ReturnType<typeof normalizePerformance>
+ * }>}
+ * @throws {Error} Rejette si une ressource manque ou si un appel echoue.
+ */
 export async function getUserProfile(userId) {
   const [user, activity, averageSessions, performance] = await Promise.all([
     dataSource.user(userId),
