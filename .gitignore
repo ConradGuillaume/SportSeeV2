@@ -4,3 +4,7 @@ dist/
 .env.local
 *.log
 
+# Supports personnels de soutenance et fichiers temporaires de génération
+soutenance/
+.presentation-build/
+.profile-check/

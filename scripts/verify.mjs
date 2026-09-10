@@ -3,6 +3,7 @@ import { createRequire } from 'node:module'
 import { once } from 'node:events'
 import { createServer } from 'vite'
 import { normalizeActivity } from '../src/services/normalizers.js'
+import { loadPropChecks } from './verifyProps.mjs'
 
 const require = createRequire(new URL('../backend/package.json', import.meta.url))
 const express = require('express')
@@ -22,6 +23,8 @@ try {
   for (const source of ['mock', 'api']) {
     const vite = await createServer({
       configFile: false,
+      cacheDir: `node_modules/.vite-check-${source}`,
+      optimizeDeps: { noDiscovery: true, include: [] },
       server: { middlewareMode: true },
       define: {
         'import.meta.env.VITE_DATA_SOURCE': JSON.stringify(source),
@@ -30,6 +33,7 @@ try {
     })
     try {
       const { getUserProfile } = await vite.ssrLoadModule('/src/services/userService.js')
+      const { assertProfileProps, assertInvalidPropsRejected } = await loadPropChecks(vite)
       for (const [id, name, score] of [[12, 'Karl', 0.12], [18, 'Cecilia', 0.3]]) {
         const profile = await getUserProfile(id)
         assert.equal(profile.id, id)
@@ -40,7 +44,13 @@ try {
         assert.equal(profile.performance.length, 6)
         assert.equal(profile.keyData.length, 4)
         assert.ok(profile.keyData.every(({ value }) => Number.isFinite(value)))
+        assertProfileProps(profile)
         console.log(`PASS: ${source} profile ${id}, name, score and four datasets`)
+      }
+      console.log(`PASS: ${source} normalized profiles satisfy all component PropTypes`)
+      if (source === 'mock') {
+        assertInvalidPropsRejected()
+        console.log('PASS: missing and invalid props warn; zero score is accepted')
       }
       await assert.rejects(getUserProfile(999))
       console.log(`PASS: ${source} unknown user rejected`)

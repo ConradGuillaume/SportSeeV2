@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {
   Bar,
   BarChart,
@@ -10,6 +11,14 @@ import {
   YAxis,
 } from 'recharts'
 
+/**
+ * Affiche le poids et les calories de la journée survolée.
+ * Les props sont injectées par Recharts après la création de l'élément.
+ * @param {Object} props Propriétés de l'infobulle.
+ * @param {boolean} [props.active] Indique si une journée est survolée.
+ * @param {Array<{value: number}>} [props.payload] Séries poids puis calories.
+ * @returns {React.ReactElement|null} Infobulle, ou rien hors survol.
+ */
 function ActivityTooltip({ active, payload }) {
   if (!active || !payload?.length) return null
 
@@ -21,6 +30,18 @@ function ActivityTooltip({ active, payload }) {
   )
 }
 
+ActivityTooltip.propTypes = {
+  active: PropTypes.bool,
+  payload: PropTypes.arrayOf(PropTypes.shape({ value: PropTypes.number.isRequired })),
+}
+
+/**
+ * Affiche l'activité quotidienne avec une échelle par unité (kg et kcal).
+ * @param {Object} props Propriétés du graphique.
+ * @param {Array<{day: string, kilogram: number, calories: number}>} props.sessions
+ * Journées normalisées : jour du mois, poids en kg et calories brûlées en kcal.
+ * @returns {React.ReactElement} Graphique en barres avec légende et infobulle.
+ */
 export function ActivityChart({ sessions }) {
   return (
     <article className="chart-card chart-card--activity">
@@ -68,4 +89,14 @@ export function ActivityChart({ sessions }) {
       </ResponsiveContainer>
     </article>
   )
+}
+
+ActivityChart.propTypes = {
+  sessions: PropTypes.arrayOf(
+    PropTypes.shape({
+      day: PropTypes.string.isRequired,
+      kilogram: PropTypes.number.isRequired,
+      calories: PropTypes.number.isRequired,
+    }).isRequired,
+  ).isRequired,
 }

@@ -11,6 +11,11 @@ const activities = [
   { label: 'Musculation', icon: musculationIcon },
 ]
 
+/**
+ * Affiche les activités et le copyright, sans props.
+ * Les boutons d'activité n'ouvrent pas encore d'autres écrans.
+ * @returns {React.ReactElement} Barre latérale de navigation.
+ */
 export function Sidebar() {
   return (
     <aside className="sidebar" aria-label="Activités">

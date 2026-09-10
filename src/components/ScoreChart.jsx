@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {
   PolarAngleAxis,
   RadialBar,
@@ -6,6 +7,12 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 
+/**
+ * Convertit le score normalisé en pourcentage et affiche la part de l'objectif.
+ * @param {Object} props Propriétés du graphique.
+ * @param {number} props.score Proportion entre 0 et 1, bornée par le normaliseur.
+ * @returns {React.ReactElement} Barre radiale et pourcentage arrondi.
+ */
 export function ScoreChart({ score }) {
   const percentage = Math.round(score * 100)
   const data = [{ name: 'score', value: percentage, fill: '#ff0000' }]
@@ -36,4 +43,8 @@ export function ScoreChart({ score }) {
       </div>
     </article>
   )
+}
+
+ScoreChart.propTypes = {
+  score: PropTypes.number.isRequired,
 }

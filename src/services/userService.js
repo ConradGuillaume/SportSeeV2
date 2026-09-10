@@ -25,15 +25,26 @@ const dataSource = {
 }
 
 /**
- * Charge les quatre ressources en parallele, puis les normalise pour React.
+ * Profil normalisé transmis à l'interface, indépendant de la source des données.
+ * @typedef {Object} UserProfile
+ * @property {number} id Identifiant utilisateur.
+ * @property {string} firstName Prénom affiché dans l'accueil.
+ * @property {number} score Proportion entre 0 et 1.
+ * @property {Array<{type: string, label: string, value: number, unit: string, tone: string}>} keyData Indicateurs nutritionnels.
+ * @property {Array<{day: string, kilogram: number, calories: number}>} activity Activité quotidienne en kg et kcal.
+ * @property {Array<{day: string, sessionLength: number}>} averageSessions Jours libellés et durées en minutes.
+ * @property {Array<{kind: string, value: number}>} performance Catégories traduites et valeurs.
+ */
+
+/**
+ * Charge les quatre ressources en parallèle, puis les normalise pour React.
  * VITE_DATA_SOURCE=api active HTTP ; toute autre valeur utilise le mock.
  * @param {number} userId Identifiant utilisateur (12 ou 18 dans les exemples).
- * @returns {Promise<ReturnType<typeof normalizeMainUser> & {
- *   activity: ReturnType<typeof normalizeActivity>,
- *   averageSessions: ReturnType<typeof normalizeAverageSessions>,
- *   performance: ReturnType<typeof normalizePerformance>
- * }>}
- * @throws {Error} Rejette si une ressource manque ou si un appel echoue.
+ * @returns {Promise<UserProfile>} Profil prêt à être transmis aux composants.
+ * @throws {Error} Rejette si une ressource manque ou si un appel échoue.
+ * @example
+ * const profile = await getUserProfile(12)
+ * // profile.firstName === 'Karl', profile.score === 0.12
  */
 export async function getUserProfile(userId) {
   const [user, activity, averageSessions, performance] = await Promise.all([

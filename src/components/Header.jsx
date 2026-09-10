@@ -1,6 +1,11 @@
 import React from 'react'
 import logo from '../assets/images/logo.png'
 
+/**
+ * Affiche la marque et la navigation principale, sans props.
+ * Les liens renvoient actuellement vers la racine de l'application.
+ * @returns {React.ReactElement} En-tête SportSee.
+ */
 export function Header() {
   return (
     <header className="topbar">
