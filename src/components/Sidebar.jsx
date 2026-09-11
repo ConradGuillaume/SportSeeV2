@@ -20,6 +20,7 @@ export function Sidebar() {
   return (
     <aside className="sidebar" aria-label="Activités">
       <nav className="activity-nav">
+        {/* Génère les boutons depuis la liste ; chaque libellé nomme son bouton accessible. */}
         {activities.map(({ label, icon }) => (
           <button key={label} type="button" aria-label={label}>
             <span aria-hidden="true">

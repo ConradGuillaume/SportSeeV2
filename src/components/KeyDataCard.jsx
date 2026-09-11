@@ -5,6 +5,7 @@ import caloriesIcon from '../assets/images/flamme.png'
 import carbsIcon from '../assets/images/pomme.png'
 import proteinsIcon from '../assets/images/prot.png'
 
+// Associe chaque indicateur à son image pour réutiliser la même carte.
 const iconByType = {
   calories: caloriesIcon,
   proteins: proteinsIcon,
@@ -23,11 +24,13 @@ const iconByType = {
  * @returns {React.ReactElement} Carte nutritionnelle.
  */
 export function KeyDataCard({ item }) {
+  // Formate les milliers pour l'affichage : 1930 devient 1,930.
   const formattedValue = new Intl.NumberFormat('en-US').format(item.value)
   const icon = iconByType[item.type]
 
   return (
     <article className="key-card">
+      {/* L'icône est décorative : le libellé donne déjà l'information au lecteur d'écran. */}
       <img className="key-icon" src={icon} alt="" />
       <div>
         <strong>
@@ -40,6 +43,7 @@ export function KeyDataCard({ item }) {
   )
 }
 
+// Vérifie le format d'une carte : type autorisé, libellé, nombre et unité.
 KeyDataCard.propTypes = {
   item: PropTypes.shape({
     type: PropTypes.oneOf(['calories', 'proteins', 'carbs', 'lipids']).isRequired,

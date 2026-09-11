@@ -1,28 +1,37 @@
-import { fetchEndpoint } from './apiClient.js'
+import { fetchEndpoint } from "./apiClient.js";
 import {
   getMockActivity,
   getMockAverageSessions,
   getMockPerformance,
   getMockUser,
-} from './mockClient.js'
+} from "./mockClient.js";
 import {
   normalizeActivity,
   normalizeAverageSessions,
   normalizeMainUser,
   normalizePerformance,
-} from './normalizers.js'
+} from "./normalizers.js";
 
-const useApi = import.meta.env.VITE_DATA_SOURCE === 'api'
+// Choisit l'API si la configuration vaut "api" dans .env.local, sinon les données locales du mock.
+const useApi = import.meta.env.VITE_DATA_SOURCE === "api";
 
+// Propose les mêmes quatre ressources, quelle que soit la source choisie.
 const dataSource = {
-  user: (userId) => (useApi ? fetchEndpoint(`/user/${userId}`) : getMockUser(userId)),
+  user: (userId) =>
+    useApi ? fetchEndpoint(`/user/${userId}`) : getMockUser(userId),
   activity: (userId) =>
-    useApi ? fetchEndpoint(`/user/${userId}/activity`) : getMockActivity(userId),
+    useApi
+      ? fetchEndpoint(`/user/${userId}/activity`)
+      : getMockActivity(userId),
   averageSessions: (userId) =>
-    useApi ? fetchEndpoint(`/user/${userId}/average-sessions`) : getMockAverageSessions(userId),
+    useApi
+      ? fetchEndpoint(`/user/${userId}/average-sessions`)
+      : getMockAverageSessions(userId),
   performance: (userId) =>
-    useApi ? fetchEndpoint(`/user/${userId}/performance`) : getMockPerformance(userId),
-}
+    useApi
+      ? fetchEndpoint(`/user/${userId}/performance`)
+      : getMockPerformance(userId),
+};
 
 /**
  * Profil normalisé transmis à l'interface, indépendant de la source des données.
@@ -46,18 +55,23 @@ const dataSource = {
  * const profile = await getUserProfile(12)
  * // profile.firstName === 'Karl', profile.score === 0.12
  */
+
+// Centralise le chargement des données d’un utilisateur et retourne un profil normalisé.
 export async function getUserProfile(userId) {
+  // Lance les quatre chargements en parallèle ; une erreur fait rejeter l'ensemble.
   const [user, activity, averageSessions, performance] = await Promise.all([
     dataSource.user(userId),
     dataSource.activity(userId),
     dataSource.averageSessions(userId),
     dataSource.performance(userId),
-  ])
+  ]);
 
+  // Normalise les réponses et retourne un seul objet utilisable par les composants.
   return {
+    // Recopie id, firstName, score et keyData dans le profil final.
     ...normalizeMainUser(user),
     activity: normalizeActivity(activity),
     averageSessions: normalizeAverageSessions(averageSessions),
     performance: normalizePerformance(performance),
-  }
+  };
 }

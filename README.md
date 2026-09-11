@@ -29,7 +29,7 @@ L'accueil propose Karl et Cecilia. Cliquer sur un profil charge son tableau de b
 
 Il s'agit d'une sélection de profil frontend, sans mot de passe ni authentification. Les deux identités disponibles sont déclarées dans `ProfileSelection.jsx` ; leurs données sportives viennent du service mock/API existant. Aucune route backend ni dépendance supplémentaire n'est nécessaire.
 
-Pendant le chargement ou après une erreur, le choix reste accessible. « Réessayer » relance le chargement du profil après une panne. Lors d'un changement, les anciennes données sont effacées et les réponses devenues obsolètes sont ignorées.
+Pendant le chargement ou après une erreur, le bouton « Changer de profil » reste accessible. Pour réessayer après une panne, revenir au choix puis sélectionner à nouveau le profil. Lors d'un changement, les anciennes données sont effacées et les réponses devenues obsolètes sont ignorées.
 
 ## Lancer le backend
 
@@ -79,7 +79,7 @@ Les variables sont lues par Vite : redémarrer le serveur après modification et
 ## Flux de données
 
 1. `ProfileSelection.jsx` transmet l'identifiant choisi à `App.jsx`, qui le conserve dans son state.
-2. L'effet de `App.jsx` demande le profil au service lorsque l'identifiant change ou qu'un nouvel essai est demandé.
+2. L'effet de `App.jsx` demande le profil au service lorsque l'identifiant change.
 3. `userService.js` sélectionne le mock ou l'API selon `VITE_DATA_SOURCE`.
 4. Les quatre ressources sont chargées en parallèle.
 5. `normalizers.js` retourne un modèle unique aux composants React.
@@ -107,7 +107,7 @@ Le périmètre actuel couvre la page profil desktop. Les liens horizontaux point
 
 ## Documentation du code et PropTypes
 
-Le README explique l'installation et l'organisation du projet. La JSDoc décrit les responsabilités, paramètres, unités, retours et erreurs des fonctions. Elle couvre les composants, leurs infobulles et curseurs, les services, les normaliseurs et les callbacks de sélection/rechargement. Le type `UserProfile`, défini dans `userService.js`, décrit le contrat normalisé du tableau de bord.
+Le README explique l'installation et l'organisation du projet. La JSDoc décrit les responsabilités, paramètres, unités, retours et erreurs des fonctions. Elle couvre les composants, leurs infobulles et curseurs, les services, les normaliseurs et les callbacks de sélection. Le type `UserProfile`, défini dans `userService.js`, décrit le contrat normalisé du tableau de bord.
 
 Pour consulter cette documentation, ouvrir la fonction dans le code ou la survoler dans un éditeur compatible comme VS Code. La documentation JSDoc est conservée dans les sources ; aucun site HTML de documentation n'est généré automatiquement.
 
@@ -118,7 +118,7 @@ Pour consulter cette documentation, ouvrir la fonction dans le code ou la survol
 | `ActivityChart` | `sessions` : tableau de journées avec `day` (texte), `kilogram` et `calories` (nombres). |
 | `AverageSessionsChart` | `sessions` : tableau avec `day` (texte) et `sessionLength` (nombre de minutes). |
 | `PerformanceChart` | `data` : tableau avec `kind` (texte) et `value` (nombre). |
-| `ScoreChart` | `score` : nombre obligatoire ; sa plage 0–1 est gérée par la normalisation. |
+| `ScoreChart` | `score` : nombre obligatoire, attendu entre 0 et 1 comme dans le backend fourni. |
 | `KeyDataCard` | `item` : type d'indicateur autorisé, libellé, valeur numérique et unité `g` ou `kCal`. |
 | `ProfileSelection` | `onSelect` : fonction obligatoire, appelée avec l'identifiant choisi. |
 

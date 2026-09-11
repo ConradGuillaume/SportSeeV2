@@ -18,6 +18,7 @@ import {
  * @returns {React.ReactElement|null} Infobulle ou rien hors survol.
  */
 function SessionsTooltip({ active, payload }) {
+  // Affiche en minutes la valeur fournie par Recharts pour le jour survolé.
   if (!active || !payload?.length) return null
 
   return <div className="sessions-tooltip">{payload[0].value} min</div>
@@ -38,6 +39,7 @@ SessionsTooltip.propTypes = {
  * @returns {React.ReactElement} Rectangle de surbrillance.
  */
 function SessionsCursor({ points, width, height }) {
+  // Récupère la position du survol pour assombrir la zone située à sa droite.
   const x = points?.[0]?.x ?? 0
   return <Rectangle fill="rgba(0, 0, 0, 0.12)" x={x} y={0} width={width - x} height={height} />
 }
@@ -63,6 +65,7 @@ export function AverageSessionsChart({ sessions }) {
       <h2>Durée moyenne des sessions</h2>
       <ResponsiveContainer width="100%" height={190}>
         <LineChart data={sessions} margin={{ top: 50, right: 12, bottom: 12, left: 12 }}>
+          {/* Affiche tous les jours de la semaine sur l'axe horizontal. */}
           <XAxis
             dataKey="day"
             axisLine={false}
@@ -70,8 +73,10 @@ export function AverageSessionsChart({ sessions }) {
             tick={{ fill: 'rgba(255, 255, 255, 0.72)', fontSize: 12 }}
             interval={0}
           />
+          {/* Les durées déterminent la hauteur des points ; les graduations sont masquées. */}
           <YAxis hide domain={['dataMin - 10', 'dataMax + 20']} />
           <Tooltip content={<SessionsTooltip />} cursor={<SessionsCursor />} />
+          {/* Trace les durées reçues avec une courbe lissée et un point actif au survol. */}
           <Line
             type="natural"
             dataKey="sessionLength"
@@ -86,6 +91,7 @@ export function AverageSessionsChart({ sessions }) {
   )
 }
 
+// Vérifie les types des jours et durées reçus par le graphique en développement.
 AverageSessionsChart.propTypes = {
   sessions: PropTypes.arrayOf(
     PropTypes.shape({

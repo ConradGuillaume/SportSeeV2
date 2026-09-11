@@ -432,8 +432,7 @@ button {
   margin: -24px 0 28px;
 }
 
-.profile-switch,
-.profile-retry {
+.profile-switch {
   padding: 10px 16px;
   border: 1px solid #e60000;
   border-radius: 6px;
@@ -443,25 +442,14 @@ button {
   cursor: pointer;
 }
 
-.profile-switch:hover,
-.profile-retry:hover {
+.profile-switch:hover {
   background: #fff5f5;
 }
 
 .profile-option:focus-visible,
-.profile-switch:focus-visible,
-.profile-retry:focus-visible {
+.profile-switch:focus-visible {
   outline: 3px solid #282d30;
   outline-offset: 4px;
-}
-
-.profile-selection h1:focus,
-.intro h1:focus {
-  outline: none;
-}
-
-.profile-error > p:not(.state-message) {
-  line-height: 1.6;
 }
 
 @media (prefers-reduced-motion: reduce) {

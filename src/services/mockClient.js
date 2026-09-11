@@ -15,8 +15,10 @@ import {
  * @throws {Error} Si aucune ressource ne correspond à l'identifiant.
  */
 function findByUserId(collection, userId, key = 'userId') {
+  // Cherche la ressource dont l'identifiant correspond au profil demandé.
   const item = collection.find((entry) => entry[key] === Number(userId))
 
+  // Signale une ressource absente pour déclencher l'état d'erreur de l'interface.
   if (!item) {
     throw new Error(`No mock data for user ${userId}`)
   }
@@ -31,6 +33,7 @@ function findByUserId(collection, userId, key = 'userId') {
  * @throws {Error} La promesse rejette si l'utilisateur est inconnu.
  */
 export async function getMockUser(userId) {
+  // Le profil général utilise id ; les autres ressources utilisent userId.
   return findByUserId(USER_MAIN_DATA, userId, 'id')
 }
 

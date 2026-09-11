@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 // L'API fournie propose ces deux profils, sans route de liste ni authentification.
@@ -15,16 +15,10 @@ const demoProfiles = [
  * @returns {React.ReactElement} Choix des profils accessible au clavier.
  */
 export function ProfileSelection({ onSelect }) {
-  const heading = useRef(null)
-
-  useEffect(() => {
-    heading.current?.focus()
-  }, [])
-
   return (
     <section className="profile-selection" aria-labelledby="profile-selection-title">
       <p className="demo-label">Bienvenue sur SportSee</p>
-      <h1 id="profile-selection-title" ref={heading} tabIndex={-1}>
+      <h1 id="profile-selection-title">
         Votre prochain objectif<br />
         commence <span>ici.</span>
       </h1>
@@ -35,6 +29,7 @@ export function ProfileSelection({ onSelect }) {
 
       <h2>Connexion rapide</h2>
       <div className="profile-options">
+        {/* Crée un bouton par profil ; onSelect transmet l'identifiant choisi à App. */}
         {demoProfiles.map(({ id, firstName, initial }) => (
           <button
             className="profile-option"
@@ -57,6 +52,7 @@ export function ProfileSelection({ onSelect }) {
   )
 }
 
+// Exige une fonction pour communiquer le choix du profil au composant parent.
 ProfileSelection.propTypes = {
   onSelect: PropTypes.func.isRequired,
 }

@@ -1,3 +1,4 @@
+// Lit l'adresse configurée du backend, ou utilise le serveur local par défaut.
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000'
 
 /**
@@ -7,12 +8,15 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000
  * @throws {Error} Rejette en cas d'erreur HTTP, reseau ou de JSON invalide.
  */
 export async function fetchEndpoint(path) {
-  const response = await fetch(`${API_BASE_URL}${path}`)
+  // Envoie une requête GET et attend la réponse
+  const response = await fetch(`${API_BASE_URL}${path}`);
 
+  // Si le serveur répond avec une erreur, arrête le chargement et signale l'échec.
   if (!response.ok) {
-    throw new Error(`Request failed: ${response.status}`)
+    throw new Error(`Request failed: ${response.status}`);
   }
 
-  const payload = await response.json()
-  return payload.data
+  // Convertit le JSON en objet JavaScript
+  const payload = await response.json();
+  return payload.data;
 }
